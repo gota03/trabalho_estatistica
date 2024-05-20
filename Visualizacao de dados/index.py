@@ -60,7 +60,7 @@ temperatura.pack()
 def enviar_temperatura():
     global indice_mes
     temperatura_dict = temperatura.get()
-    if temperatura.get() != "":  # Verifica se a entrada de temperatura não está vazia
+    if temperatura.get() != "":
         meses_dict[meses[indice_mes]] = float(temperatura_dict)
 
         if indice_mes == len(meses) - 1:
@@ -70,20 +70,15 @@ def enviar_temperatura():
             # Atualiza o índice e o rótulo do mês
             indice_mes = (indice_mes + 1)
             label.configure(text=meses[indice_mes])
-            temperatura.delete(0, 'end')  # Limpa o campo de entrada após o envio
-    else:
-        temperatura.configure(placeholder_text="Digite um valor válido")
+            temperatura.delete(0, 'end')
 
 
 def gerar_grafico():
-    # Obtém os meses e as temperaturas reais
     meses_rotulos = list(meses_dict.keys())
     temperaturas_reais = list(meses_dict.values())
 
-    # Calcula a sensação térmica para cada mês
     sensacao_termica = [temp * 1.1 for temp in temperaturas_reais]
 
-    # Calcula a média da temperatura no ano
     media_temperatura_ano = sum(meses_dict.values()) / len(meses_dict)
 
     # Cria um gráfico de barras para as temperaturas reais
@@ -96,15 +91,12 @@ def gerar_grafico():
     # Adiciona a média da temperatura no ano como uma linha horizontal
     plt.axhline(y=media_temperatura_ano, color='red', linestyle='--', label='Média Anual')
 
-    # Adiciona legendas e rótulos ao gráfico
     plt.title('Estatísticas da temperatura ao longo do ano')
     plt.xlabel('Meses do ano')
     plt.ylabel('Temperatura (°C)')
     plt.legend()
     plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
-
-    # Exibe o gráfico
     plt.show()
 
 
@@ -112,6 +104,7 @@ def calcular_variancia():
     media_temperaturas = sum(meses_dict.values()) / len(meses_dict)
 
     variancia = sum((temp - media_temperaturas) ** 2 for temp in meses_dict.values()) / len(meses_dict)
+    print(variancia)
     exibir_resultado(f"Variância: {variancia:.2f}")
 
 
@@ -119,6 +112,7 @@ def calcular_desvio_padrao():
     media_temperaturas = sum(meses_dict.values()) / len(meses_dict)
 
     desvio_padrao = (sum((temp - media_temperaturas) ** 2 for temp in meses_dict.values()) / len(meses_dict)) ** 0.5
+    print(desvio_padrao)
     exibir_resultado(f"Desvio padrão: {desvio_padrao:.2f}")
 
 
@@ -128,17 +122,19 @@ def calcular_coeficiente_variacao():
     desvio_padrao = (sum((temp - media_temperaturas) ** 2 for temp in meses_dict.values()) / len(meses_dict)) ** 0.5
 
     coeficiente_variacao = (desvio_padrao / media_temperaturas) * 100
+    print(coeficiente_variacao)
     exibir_resultado(f"Coeficiente de variação: {coeficiente_variacao:.2f}%")
 
 
 def calcular_amplitude_total():
     amplitude_total = max(meses_dict.values()) - min(meses_dict.values())
+    print(amplitude_total)
     exibir_resultado(f"Amplitude Total: {amplitude_total:.2f}")
 
 
 # Frame para exibir os resultados
 frame_resultados = ctk.CTkFrame(janela)
-frame_resultados.pack(fill="both", expand=True)
+frame_resultados.pack(fill="both", expand=True, pady=20)
 
 
 # Função para exibir o resultado no frame de resultados
@@ -159,23 +155,19 @@ btn_gerar_grafico = ctk.CTkButton(janela, text="Gerar gráfico", command=gerar_g
                                   fg_color="green", font=("Arial bold", 15), hover_color="green")
 btn_gerar_grafico.place(x=590, y=600)
 
-# Botão para calcular a variância
 btn_variancia = ctk.CTkButton(janela, text="Calcular variância", command=calcular_variancia, width=200, height=40,
                               font=("Arial bold", 15))
 btn_variancia.place(x=200, y=350)
 
-# Botão para calcular o coeficiente de variação
 btn_coeficiente_variacao = ctk.CTkButton(janela, text="Calcular coeficiente de variação",
                                          command=calcular_coeficiente_variacao, width=200, height=40,
                                          font=("Arial bold", 15))
 btn_coeficiente_variacao.place(x=430, y=350)
 
-# Botão para calcular a amplitude total
 btn_amplitude_total = ctk.CTkButton(janela, text="Calcular amplitude total", command=calcular_amplitude_total,
                                     width=200, height=40, font=("Arial bold", 15))
 btn_amplitude_total.place(x=690, y=350)
 
-# Botão para calcular o desvio-padrão
 btn_desvio_padrao = ctk.CTkButton(janela, text="Calcular desvio padrão", command=calcular_desvio_padrao, width=200,
                                   height=40, font=("Arial bold", 15))
 btn_desvio_padrao.place(x=920, y=350)
