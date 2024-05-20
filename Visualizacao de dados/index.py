@@ -71,8 +71,6 @@ def enviar_temperatura():
             indice_mes = (indice_mes + 1)
             label.configure(text=meses[indice_mes])
             temperatura.delete(0, 'end')  # Limpa o campo de entrada após o envio
-    else:
-        temperatura.configure(placeholder_text="Digite um valor válido")
 
 
 def gerar_grafico():
